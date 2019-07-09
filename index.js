@@ -14,18 +14,33 @@ connect.then((db) => {
 	// newDish.save()
 
 	Dishes.create({
-		name: 'Pizza Hawajska',
-		description: 'szynka, banany, curry'
+		name: 'Pizza Sycylijska',
+		description: 'szynka, pesto, salami'
 	})
 	.then((dish) => {
-			// console.log(dish);
+			console.log(dish);
 
-		return Dishes.find({});
+		return Dishes.findByIdAndUpdate(dish._id, 
+			{$set: {description: 'Updated test'}},
+			{
+			new: true  //this is to return the updated item to us
+		}).exec();
 
 	})
-	.then((dishes) => {
-		console.log("Dishes in the db: ", dishes);
+	.then((dish) => {
+		console.log("The dish is: ", dish);
 
+		dish.comments.push({
+			rating: 5,
+			comment: 'Very good!',
+			author: 'Leonard'
+		});
+
+		return dish.save();
+	})
+	.then((dish) => {
+		console.log(dish);
+	
 		return Dishes.deleteMany({});
 	})
 	.then (() => {
